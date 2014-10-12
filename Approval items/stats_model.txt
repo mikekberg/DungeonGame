@@ -1,0 +1,27 @@
+Stats Model
+
+
+-Experience based
+-Stats include:  Strength,  Agility,  Intelligence,  Constitution
+-On level up, you add points to build stats
+
+Strength - affects melee damage
+Agility - affects weapon speed, magic cool down
+Intelligence - affects spell damage
+Constitution - affects hitpoints
+
+
+
+Weapons and Armor
+
+-One slot for Weapons
+-One slot for Armour
+-Weapons and Armour have slot(s) you can attach augments to
+-Class specific augments can only be attached to certain weapon and armour types (eg. augments to increase magic can only be attached to staffs and wands)
+-Other augments (2x experience, increase hit%, etc.) can be attached to any item
+
+
+
+Elements
+
+we need to discuss elemental damage, if we want to add it or not.

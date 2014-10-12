@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Magic Test!</title>
+        <style>
+            @font-face {
+                font-family: 'PressStart';
+                src: url('prstartk.ttf'), url('prstartk.eot');
+            }
+        </style>
+		<script type="text/javascript" src="scripts/Libraries/binaryHeap.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/astar.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/jquery-1.6.2.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/jquery-ui-1.8.11.custom.min.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/jquery.pnotify.min.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/underscore-min.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/QEvent.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="magic.css" />
+	</head>
+	<body>
+	<div id="Game">
+		<div id="MagicBlack">
+			<div id="MagicRing">
+					<input type="text" name="magic" maxlength="4" id="SpellText"></input>
+			</div>
+			
+		</div>
+	</div>
+<script>				
+	var fireSpell = "wsww";
+	var iceSpell = "wasd";
+	var magicReady = true;
+	var magicMenuToggle = false;
+	
+		$(function(){
+			$(window).keydown(function(event){
+				if(event.keyCode == 32 && magicReady == true && magicMenuToggle == false) {
+					$('#SpellText').val('');
+					$('#MagicBlack').fadeToggle(50, function(){magicMenuToggle = true; $('#SpellText').focus(); });
+				}
+			});
+		});	
+			
+			
+		$(function(){
+			$(window).keydown(function(event){
+				if(event.keyCode == 32 && magicMenuToggle == true) {				
+					$('#MagicBlack').fadeToggle(50, function(){
+						magicMenuToggle = false;
+					});
+				}
+				if($('#SpellText').val() == fireSpell){
+					alert("Casted Fire Spell!!!");
+					magicReady = false;
+					$('#SpellText').val('');
+					setTimeout(function(){
+						magicReady = true
+					}, 3000);
+				}
+				if($('#SpellText').val() == iceSpell){
+					alert("Casted Ice Spell!!!");
+					magicReady = false;
+					$('#SpellText').val('');
+					setTimeout(function(){
+						magicReady = true
+					}, 5000);
+				}
+			});
+			
+
+		});
+		</script>
+	</body>
+</html>

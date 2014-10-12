@@ -1,0 +1,578 @@
+﻿html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+	height:100%;
+	width: 100%;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.MenuText{
+	font-family: 'PressStart';
+	font-size: 16px;
+	text-shadow:
+	-2px 0px 0 #1e2623,
+	0px 2px 0 #1e2623,
+	0px -2px 0 #1e2623,
+	2px 0px 0 #1e2623,
+	-2px 2px 0 #2f3734,
+	-2px -2px 0 #2f3734,
+	2px -2px 0 #2f3734,
+	2px 2px 0 #2f3734;
+}
+
+
+div#EquipMenuContainer{
+    width: 274px;
+	height: 500px;
+    top: 10%;
+    left: 60%;
+	position: absolute;
+	display: none;
+}
+
+div#EquipContainer{
+    background:url(../sprites/menu/equip_menu.png) no-repeat;
+	width: 274px;
+	height: 500px;
+	color: white;
+	float: right;
+}
+
+div#Equip{
+	text-align:center;
+	padding:22px 0px 0px 0px;
+}
+
+div#EquipSlots{
+	position:relative;
+	left:50px;
+	top:46px;
+	width: 200px;
+	height: 200px;
+}
+
+div.AugSlot{
+	background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+div.EquipSlot
+{
+    background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+div.EquipSlot div
+{
+    width: 54px;
+    height: 54px;
+}
+
+/*div.WeaponSlot{
+	background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+div.ShieldSlot{
+	background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+div.ArmorSlot{
+	background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+div.ShirtSlot{
+	background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+div.PantsSlot{
+	background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+div.ShoesSlot{
+	background:url(../sprites/menu/slot.png) no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}*/
+
+div#Aug{
+	text-align:center;
+}
+
+div#AugW{
+	text-align:center;
+	padding:22px 0px 0px 0px;
+}
+
+div#AugWSlots{
+	position:relative;
+	left:50px;
+	top:10px;
+	width: 200px;
+	height: 55px;
+}
+
+div#AugA{
+	text-align:center;
+	padding:26px 0px 0px 0px;
+}
+
+div#AugASlots{
+	position:relative;
+	left:50px;
+	top:10px;
+	width: 200px;
+	height: 55px;
+}
+	
+div#InvContainer{
+    background:url(../sprites/menu/item_menu2.png) no-repeat;
+	width: 310px;
+	height: 602px;
+	color: white;
+    padding: 35px;
+    position: absolute;
+}
+
+div#InvBag1{
+	position:relative;
+	left:35px;
+	top:35px;
+	width: 300px;
+	height: 180px;
+}
+
+div#InvBag2{
+	position:relative;
+	left:35px;
+	top:35px;
+	width: 300px;
+	height: 180px;
+}
+
+div#InvBag3{
+	position:relative;
+	left:35px;
+	top:35px;
+	width: 300px;
+	height: 180px;
+}
+
+div.InvSlotRow{
+	background-image:url(../sprites/menu/slot.png);
+    background-repeat: no-repeat;
+	float:left;
+	width: 54px;
+	height: 54px;
+	margin: 0px 6px 6px 0px;
+}
+
+    div.InvSlotRow div
+    {
+        width: 54px;
+        height: 54px;
+    }
+
+
+div#InvIcon1{
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon2{
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon3{
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon4{
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon5{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon6{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon7{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon8{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon9{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon10{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon11{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon12{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon13{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon14{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon15{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon16{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon17{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon18{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon19{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon20{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon21{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon22{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon23{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon24{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon25{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon26{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon27{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon28{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon29{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon30{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon31{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon32{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon33{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon34{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon35{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon36{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon37{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon38{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon39{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon40{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon41{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon42{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon43{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon44{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#InvIcon45{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#WeaponIcon{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#ShieldIcon{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#ArmorIcon{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#ShirtIcon{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#PantsIcon{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#ShoesIcon{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#AugIcon1{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#AugIcon2{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#AugIcon3{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#AugIcon4{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#AugIcon5{
+	background:;
+	width: 54px;
+	height: 54px;
+}
+
+div#AugIcon6{
+	background:;
+	width: 54px;
+	height: 54px;
+}

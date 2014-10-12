@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <!-- <title>Super Jelly Cave!</title> -->
+        <style>
+            @font-face {
+                font-family: 'PressStart';
+                src: url('prstartk.ttf'), url('prstartk.eot');
+            }
+
+            .radial-gradient
+            {
+                background: -moz-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
+                background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
+                background: -webkit-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* Opera 12+ */
+                background: -ms-radial-gradient(center, ellipse cover, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* IE10+ */
+                background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 fallback on horizontal gradient */
+
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+
+        <script src="scripts/Libraries/quadtree.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/binaryHeap.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/astar.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/jquery-1.6.2.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/jquery-ui-1.8.11.custom.min.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/jquery.pnotify.min.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/underscore-min.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/QEvent.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/CollisionList.js"></script>
+        
+        <script type="text/javascript" src="scripts/gameData.js"></script>
+       
+        <script type="text/javascript" src="scripts/GameEngine/Events.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/GameUtils.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/ImageCacher.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/cameras.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/canvasUtils.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/RenderEng.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Effects.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/sprite.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/sprite.walkable.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/sprite.attackable.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/world.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/debug.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/WorldGenerators.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/weapon.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Spawners.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Enemy.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/AI.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Overlays.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/GarbageCollector.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/GameMechanics.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Player.js"></script>
+        <script src="scripts/GameEngine/Lighting.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="css/stats.css" />
+        <link rel="stylesheet" type="text/css" href="css/equip.css" />
+        <link rel="stylesheet" type="text/css" href="css/magic.css" />
+        <link rel="stylesheet" href="css/jquery-ui.css" type="text/css" media="all" /> 
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/jquery.pnotify.default.css" rel="stylesheet" type="text/css" />
+        <link href="css/jquery.pnotify.default.icons.css" rel="stylesheet" type="text/css" />
+        <link href="css/mint-choc/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+    <div id="MainContainer" style="position: absolute; top: 0; left: 0; padding: 0; width: 100%; height: 100%; overflow: hidden">
+        <canvas id="mainCanvas" width="640px" height="480px" style="border: 1px solid black;"></canvas>
+    </div>
+        
+        <script type="text/javascript">
+            var ctx = $("#"+GameData.GameConsts.MAIN_CONTAINER)[0].getContext('2d');
+            var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 15, "firstpos2": 15};
+            var Renderer;
+            var World1;
+            var OverlayMan;
+            var EffectsMan;
+            var player;
+            var loader;
+            var Server;
+            var GC;
+                        
+            var FLAG_UP = 0x8;
+            var FLAG_DOWN = 0x4;
+            var FLAG_LEFT = 0x2;
+            var FLAG_RIGHT = 0x1;
+            var movementState = 0x0000;
+            //                    UDLR
+
+            var InventoryOverlay = null;
+            var EquipOverlay = null;
+
+            $(window).keydown(function (event) {
+                if (event.keyCode == 73) {
+                    if (!InventoryOverlay.Visible) {
+                        InventoryOverlay.Show();
+                        EquipOverlay.Show();
+                    }
+                    else {
+                        InventoryOverlay.Hide();
+                        EquipOverlay.Hide();
+                    }
+                }
+            });
+            
+            $(window).bind("resize", CanvasUtils.resizeCanvas);
+
+            function StopWalking(e) {
+                if (e.keyCode == 38) {
+                    movementState = movementState ^ FLAG_UP;
+                }
+                else if (e.keyCode == 40) {
+                    movementState = movementState ^ FLAG_DOWN;
+                }
+                else if (e.keyCode == 37) {
+                    movementState = movementState ^ FLAG_LEFT;
+                }
+                else if (e.keyCode == 39) {
+                    movementState = movementState ^ FLAG_RIGHT;
+                }
+                
+                if (movementState == 0) {
+                    player.StopWalking();
+                }
+                else {
+                    var moveDirection = 5 + ((movementState & (FLAG_UP | FLAG_DOWN)) > 0 ? (((movementState >> 2) & (FLAG_LEFT | FLAG_RIGHT)) == 1 ? 3 : -3) : 0) + ((movementState & (FLAG_LEFT | FLAG_RIGHT)) > 0 ? ((movementState & (FLAG_LEFT | FLAG_RIGHT)) == 1 ? 1 : -1) : 0);
+                    player.StartWalking(moveDirection);    
+                }
+                
+            }
+            
+            function MoveWorld(e) {
+                // S - 83
+                if (e.keyCode == 65) {
+                    player.Attack();
+                    return;
+                }
+                if (e.keyCode == 83) {
+
+                }
+
+                if (e.keyCode == 38) {
+                    movementState = movementState | FLAG_UP;
+                }
+                else if (e.keyCode == 40) {
+                    movementState = movementState | FLAG_DOWN;
+                }
+                else if (e.keyCode == 37) {
+                    movementState = movementState | FLAG_LEFT;
+                }
+                else if (e.keyCode == 39) {
+                    movementState = movementState | FLAG_RIGHT;
+                }
+                
+                var moveDirection = 5 + ((movementState & (FLAG_UP | FLAG_DOWN)) > 0 ? (((movementState >> 2) & (FLAG_LEFT | FLAG_RIGHT)) == 1 ? 3 : -3) : 0) + ((movementState & (FLAG_LEFT | FLAG_RIGHT)) > 0 ? ((movementState & (FLAG_LEFT | FLAG_RIGHT)) == 1 ? 1 : -1) : 0);
+                
+                if (moveDirection == 5) {
+                    return;
+                }
+                
+                player.StartWalking(moveDirection);
+            }			
+			
+            function GameLoop() {
+                var now = (new Date()).getTime();
+                var elapseTime = now - (GameLoop.lastUpdateTime || now);
+                
+                Renderer.Render(elapseTime, now);
+                
+                if (elapseTime > 16) {
+                    GameLoop.lastUpdateTime = now;            
+                    player.Update(elapseTime);
+                    World1.Update(elapseTime);
+                    OverlayMan.Update(elapseTime);
+                    EffectsMan.Update(elapseTime);
+                    GC.Update(elapseTime);
+                }
+                
+                window.requestAnimationFrame(GameLoop);
+            }
+            
+            function getOpenTile(world) {
+                for(var x=Math.floor(world.worldSize.width/2);x<world.worldSize.width;x++) {
+                    for(var y=Math.floor(world.worldSize.height/2);y<world.worldSize.height;y++) {
+                        if (world.levelData[x][y].walkable) {
+                            return {x: x, y: y};
+                        }
+                    }
+                }
+            }
+            
+            function Init() {
+                Renderer = new RenderEng(ctx);
+                Renderer.showFPS = true;
+                $.pnotify.defaults.pnotify_delay = 3000;
+                
+                loader = $.pnotify({
+                        pnotify_title: "Loading World...",
+                        pnotify_text: "<div class=\"progress_bar\" />",
+                        pnotify_notice_icon: 'picon picon-throbber',
+                        pnotify_hide: false,
+                        pnotify_closer: false,
+                        pnotify_history: false,
+                        pnotify_stack: stack_bottomright,
+                        pnotify_addclass: "stack-bottomright"
+                    });
+                            
+                World1 = WorldGenerators.CaveGenerator.GenerateWorld("Cave", 100, 100, { lastMapDirection: 1 });
+                OverlayMan = new OverlayManager(World1);
+                EffectsMan = new EffectsManager();
+                GC = new GarbageCollector();
+                
+                //QEvent.add(World1, "StairsUp", function() { Init(); });
+                //QEvent.add(World1, "StairsDown", function() { Init(); });
+                
+                var sLoc = getOpenTile(World1);
+                var loc = World1.GetTileLocation(sLoc.x, sLoc.y);
+
+                player = new Player("Player1", Sprite.GetByName("playerSprite", loc.x, loc.y));
+                player.EquipWeapon("PlasmaSword");
+
+                InventoryOverlay = new Overlays.InventoryOverlay(player);
+                EquipOverlay = new Overlays.EquipmentOverlay(player);
+
+                QEvent.add(InventoryOverlay, "SlotClicked", function (evnt) {
+                    if (EquipOverlay.SelectedItem) {
+                        var type = EquipOverlay.SelectedElement.find("div").attr("id").split("-")[1];
+                        player.UnEquip(type);
+                        InventoryOverlay.RefreshInv();
+                        EquipOverlay.Refresh();
+                    }
+                });
+
+                var cam = Cameras.SpriteWorldCamera(World1, player.sprite);
+                
+
+                OverlayMan.Add(new Overlays.ProgressBar({ target: player.sprite, getValue: function() { return player.hp; }, maxValue: player.MaxHP() }));
+                OverlayMan.Add(new Overlays.MiniMap(World1, { width: 200, height: 200, posX: 0.8, posY: 0.05, trackSprites: [player] }));
+                
+
+                
+                Renderer.Add(cam);
+                Renderer.Add(EffectsMan);
+                Renderer.Add(OverlayMan, 'Interface');
+                
+				
+                Renderer.Add(new Lighting.AmbientLight({
+                    getSource: function () {
+                        return {
+                            x: player.sprite.LocX + (player.sprite.getWidth() / 2) - World1.worldViewX,
+                            y: player.sprite.LocY + (player.sprite.getHeight() / 2) - World1.worldViewY,
+                        };
+                    }
+                }), 'Lighting');
+                
+
+                GC.Add(OverlayMan, "overlays", function(item) { return item.dead; });
+                GC.Add(EffectsMan, "effects", function(item) { return item.dead; });
+
+                /*World1.AddEnemy(Enemy.GetByName("RedJelly", player.LocX+10, player.LocY));
+                World1.AddEnemy(Enemy.GetByName("RedJelly", player.LocX+20, player.LocY));
+                World1.AddEnemy(Enemy.GetByName("RedJelly", player.LocX-10, player.LocY));
+                World1.AddEnemy(Enemy.GetByName("RedJelly", player.LocX-20, player.LocY));*/
+                
+                Spawners.SpawnRandomly(World1, "RedJelly", 0.007);
+                Spawners.SpawnRandomly(World1, "Rat", 0.007);
+
+                for(var enemy in World1.enemies) {
+                    var getValFunc = function(target) { return function() { return (target.HP/target.MaxHP)*100; }}(World1.enemies[enemy]);
+                    var healthBar = new Overlays.ProgressBar({ target: World1.enemies[enemy].sprite, getValue: getValFunc})
+                    var killEvent = function(hBar) { return function(data) {
+                        var fadeEffect = new Effects.Fade(hBar, GameData.GameConsts.UI.Overlays.EnemyKilleFadeOptions);
+                        QEvent.add(fadeEffect, "EffectComplete", function () { hBar.dead = true; });
+                        
+                        EffectsMan.Add(fadeEffect);
+                        GameMechanics.Combat.EnemyKilled(data); 
+                    }}(healthBar);
+
+                    OverlayMan.Add(healthBar);
+                    QEvent.add(World1.enemies[enemy], "Killed", killEvent);
+                }
+                                                
+                $(window).keydown(MoveWorld);
+                $(window).keyup(StopWalking);
+                
+
+                QEvent.add(World1, Events.World.SpriteKilled, GameMechanics.World.SpriteKilled);
+                player.Equip("RedPants");
+                /*player.Equip("BlueShoes");
+                
+                player.Equip("BlueShirt");
+                player.Equip("Platemail");*/
+                               
+                GameLoop.lastUpdateTime = (new Date()).getTime();
+                ImageCacher.WaitForCacheThenCall(GameLoop);
+                loader.remove();
+
+
+                //$(document.body).append($("<div class='radial-gradient'>&nbsp;</div>"));
+            }
+
+            $(window).ready( function() {
+                $(document.body).append($("<div style='font-family: PressStart; visibility: hidden'>Test!</div>"));         //Preload font
+                CanvasUtils.resizeCanvas();
+                ImageCacher.LoadSpriteCache();
+                ImageCacher.WaitForCacheThenCall(Init);
+            });
+            
+            $("#hidr").click(function () {
+      $("span:last-child").hide("fast", function () {
+        // use callee so don't have to name the function
+        $(this).prev().hide("fast", arguments.callee); 
+      });
+    });
+    $("#showr").click(function () {
+      $("span").show(2000);
+    });
+
+        </script>
+    </body>
+</html>

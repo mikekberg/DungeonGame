@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Super Jelly Cave!</title>
+        <style>
+            @font-face {
+                font-family: 'PressStart';
+                src: url('prstartk.ttf'), url('prstartk.eot');
+            }
+        </style>
+		<script type="text/javascript" src="scripts/Libraries/binaryHeap.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/astar.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/jquery-1.6.2.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/jquery-ui-1.8.11.custom.min.js"></script>
+		<script type="text/javascript" src="scripts/Libraries/jquery.pnotify.min.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/underscore-min.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/QEvent.js"></script>
+        <script type="text/javascript" src="scripts/Libraries/CollisionList.js"></script>
+        
+        <script type="text/javascript" src="scripts/gameData.js"></script>
+       
+        <script type="text/javascript" src="scripts/GameEngine/Events.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/GameUtils.js"></script>
+		<script type="text/javascript" src="scripts/GameEngine/ImageCacher.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/cameras.js"></script>
+		<script type="text/javascript" src="scripts/GameEngine/canvasUtils.js"></script>
+		<script type="text/javascript" src="scripts/GameEngine/RenderEng.js"></script>
+		<script type="text/javascript" src="scripts/GameEngine/Effects.js"></script>
+		<script type="text/javascript" src="scripts/GameEngine/sprite.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/sprite.walkable.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/sprite.attackable.js"></script>
+		<script type="text/javascript" src="scripts/GameEngine/world.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/debug.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/WorldGenerators.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/weapon.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Spawners.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Enemy.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/AI.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/Overlays.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/GarbageCollector.js"></script>
+        <script type="text/javascript" src="scripts/GameEngine/GameMechanics.js"></script>
+        
+		
+		<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/themes/base/jquery-ui.css" type="text/css" media="all" /> 
+		<link href="css/base.css" rel="stylesheet" type="text/css" />
+		<link href="css/jquery.pnotify.default.css" rel="stylesheet" type="text/css" />
+		<link href="css/jquery.pnotify.default.icons.css" rel="stylesheet" type="text/css" />
+		<link href="css/mint-choc/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="menu.css" />
+	</head>
+	<body>
+	<div id="Game">
+	<div id="Darken">
+		<div id="MenuContainer">
+			<div id="StatsContainer">
+				<div id="Stats">
+					<h1 id="menuText">STATS</h1 id="menuText">
+				</div>
+				<div id="Level">
+					<h1 id="menuText">LEVEL: <span id="LevelNumber">130</span></h1 id="menuText">
+				</div>
+				<div id="Points">
+					<h1 id="menuText">Points: <span id="PointsNumber">123</span></h1 id="menuText">
+				</div>
+				<div id="HP">
+					<h1 id="menuText">HP &nbsp;: <span id="HPNumber">556</span></h1 id="menuText"></h1 id="menuText">
+				</div>
+				<div id="Str">
+					<h1 id="menuText">Str : <span id="StrNumber">14</span></h1 id="menuText"></h1 id="menuText">
+				</div>
+				<div id="Agi">
+					<h1 id="menuText">Agi : <span id="AgiNumber">23</span></h1 id="menuText"></h1 id="menuText">
+				</div>
+				<div id="Int">
+					<h1 id="menuText">Int : <span id="IntNumber">8</span></h1 id="menuText"></h1 id="menuText">
+				</div>
+				<div id="Exp">
+					<h1 id="menuText">EXP : <span id="ExpNumber">45223</span></h1 id="menuText"></h1 id="menuText">
+				</div>
+				<div id="NextExp">
+					<h1 id="menuText">NEXT: <span id="NextExpNumber">659</span></h1 id="menuText"></h1 id="menuText">
+				</div>
+				<div id="Gold">
+					<h1 id="menuText">GOLD: <span id="GoldNumber">368967</span></h1 id="menuText"></h1 id="menuText">
+				</div>
+			</div>
+			<div id="EquipContainer">
+				<div id="Equip">
+					<h1 id="menuText">EQUIP</h1 id="menuText">
+				</div>
+				<div id="EquipSlots">
+					<div class="Weaponlot">
+						<div id="WeaponIcon">
+						</div>
+					</div>
+					<div class="ShieldSlot">
+						<div id="ShieldIcon">
+						</div>
+					</div>
+					<div class="ArmorSlot">
+						<div id="ArmorIcon">
+						</div>
+					</div>
+					<div class="ShirtSlot">
+						<div id="ShirtIcon">
+						</div>
+					</div>
+					<div class="PantsSlot">
+						<div id="PantsIcon">
+						</div>
+					</div>
+					<div class="ShoesSlot">
+						<div id="ShoesIcon">
+						</div>
+					</div>
+				</div>
+				<div  id="Aug">
+					<h1 id="menuText">AUGMENTS</h1 id="menuText">
+				</div>
+				<div  id="AugW">
+					<h1 id="menuText">Weapon</h1 id="menuText">
+				</div>
+				<div id="AugWSlots">
+					<div class="AugSlot">
+						<div id="AugIcon1">
+						</div>
+					</div>
+					<div class="AugSlot">
+						<div id="AugIcon2">
+						</div>
+					</div>
+					<div class="AugSlot">
+						<div id="AugIcon3">
+						</div>
+					</div>
+				</div>
+				<div  id="AugA">
+					<h1 id="menuText">Armor</h1 id="menuText">
+				</div>
+				<div id="AugASlots">
+					<div class="AugSlot">
+						<div id="AugIcon4">
+						</div>
+					</div>
+					<div class="AugSlot">
+						<div id="AugIcon5">
+						</div>
+					</div>
+					<div class="AugSlot">
+						<div id="AugIcon6">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="InvContainer">
+				<div id="InvSlots">
+					<div class="InvSlotRow1">
+						<div id="InvIcon1">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon2">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon3">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon4">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon5">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon6">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon7">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon8">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon9">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon10">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon11">
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon12"> 
+						</div>
+					</div>
+					<div class="InvSlotRow1">
+						<div id="InvIcon13">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon14">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon15">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon16">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon17">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon18">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon19">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon20">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon21">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon22">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon23">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon24">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon25">
+						</div>
+					</div>
+					<div class="InvSlotRow2">
+						<div id="InvIcon26">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon27">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon28">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon29">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon30">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon31">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon32">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon33">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon34">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon35">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon36">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon37">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon38">
+						</div>
+					</div>
+					<div class="InvSlotRow3">
+						<div id="InvIcon39">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+		<script>
+			window.ondragstart = function() {return false;} 
+			var clickOne = false;
+			var selectOne = null;
+			var firstContainer = null;
+			var selectTwo = null;
+			
+			$(function() {
+				$(window).keydown(function(event){
+					if (event.keyCode == 73) {
+						$('#Darken').fadeToggle(75);
+						$('.InvSlotRow1, .InvSlotRow2, .InvSlotRow3').css({backgroundImage : 'url(sprites/menu/slot.png)' });
+						clickOne = false;
+						selectOne = null;
+						firstContainer = null;
+					}
+				});
+			});
+			$("div#EquipSlots div:first")
+			$('.InvSlotRow1, .InvSlotRow2, .InvSlotRow3').click(function ()
+				{
+					if(!clickOne)
+					{				
+						selectOne = $(this).children('div').css('backgroundImage');
+						firstContainer = $(this).children('div');
+						clickOne = true;
+						$(this).css({backgroundImage : 'url(sprites/menu/slot_select.png)'});
+					}
+					else
+					{
+						selectTwo = $(this).children('div').css('background-image');
+						$(this).children('div').css('background-image', selectOne);
+						$(firstContainer).css('background-image', selectTwo);
+						$(this).children('div').css({backgroundRepeat: 'no-repeat'});
+						clickOne = false;
+						$('.InvSlotRow1, .InvSlotRow2, .InvSlotRow3').css({backgroundImage : 'url(sprites/menu/slot.png)' });
+						clickOne = false;
+						selectOne = null;
+						firstContainer = null;
+						selectTwo = null;
+					}
+				}
+			);
+		</script>
+	</body>
+</html>

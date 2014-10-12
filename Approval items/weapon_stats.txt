@@ -1,0 +1,20 @@
+Start weapon	Rusty Sword  DMG 1
+
+
+Weapon
+
+Rusty Sword	DMG 1-6
+Club		DMG 2-5
+Dagger		DMG 2-5
+Wood Staff	DMG 1-4		INT +2
+Short Sword	DMG 5-10
+Mace		DMG 6-9
+Dirk		DMG 4-8
+
+
+
+
+
+
+
+
